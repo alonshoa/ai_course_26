@@ -125,6 +125,36 @@ a:focus {
   background: var(--color-text);
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.language-select select {
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  padding: 0.4rem 0.6rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.language-select select:focus {
+  outline: 2px solid var(--color-primary);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 .theme-toggle {
   display: inline-flex;
   align-items: center;

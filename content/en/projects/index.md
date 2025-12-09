@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Final Project Guidelines
+lang: en
 ---
 
 <section class="card">

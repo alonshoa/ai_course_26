@@ -83,11 +83,11 @@ title: AI & CS High-School Course
     <article class="card">
       <h3>Core Sections</h3>
       <ul class="list">
-        <li><a href="{{ '/content/lessons/' | relative_url }}">Lessons</a></li>
-        <li><a href="{{ '/content/slides/' | relative_url }}">Slides</a></li>
-        <li><a href="{{ '/content/assignments/' | relative_url }}">Assignments</a></li>
-        <li><a href="{{ '/content/notebooks/' | relative_url }}">Notebooks</a></li>
-        <li><a href="{{ '/content/projects/' | relative_url }}">Project Instructions</a></li>
+        <li><a data-lang-section="lessons" href="{{ '/content/en/lessons/' | relative_url }}">Lessons</a></li>
+        <li><a data-lang-section="slides" href="{{ '/content/en/slides/' | relative_url }}">Slides</a></li>
+        <li><a data-lang-section="assignments" href="{{ '/content/en/assignments/' | relative_url }}">Assignments</a></li>
+        <li><a data-lang-section="notebooks" href="{{ '/content/en/notebooks/' | relative_url }}">Notebooks</a></li>
+        <li><a data-lang-section="projects" href="{{ '/content/en/projects/' | relative_url }}">Project Instructions</a></li>
       </ul>
     </article>
     <article class="card">
@@ -109,12 +109,12 @@ title: AI & CS High-School Course
     <article class="card">
       <h3>Lesson Templates</h3>
       <p>Start every lesson with a consistent structure: objectives, agenda, code labs, reflection prompts, and homework links.</p>
-      <p><a href="{{ '/content/lessons/lesson-template.md' | relative_url }}">Open the lesson template</a></p>
+      <p><a data-lang-file="lessons/lesson-template.md" href="{{ '/content/en/lessons/lesson-template.md' | relative_url }}">Open the lesson template</a></p>
     </article>
     <article class="card">
       <h3>Project Launchpad</h3>
       <p>Kick off the final project with rubrics, milestone checklists, and proposal guidance.</p>
-      <p><a href="{{ '/content/projects/index.md' | relative_url }}">View project guidelines</a></p>
+      <p><a data-lang-file="projects/index.md" href="{{ '/content/en/projects/index.md' | relative_url }}">View project guidelines</a></p>
     </article>
   </div>
 </section>
