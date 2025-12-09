@@ -1,3 +1,10 @@
+---
+layout: lesson
+title: Syllabus
+description: Introduction to Artificial Intelligence and Machine Learning
+
+---
+
 # Introduction to Artificial Intelligence and Machine Learning  
 Welcome to the AI & ML course designed for high school students with **no prior background** in programming or mathematics.  
 The course is structured in independent **modules**, each covering a specific concept or skill. New modules will be added gradually throughout the year.
