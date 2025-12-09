@@ -3,6 +3,7 @@ layout: lesson
 title: Lesson Title
 description: Concise summary of the main idea
 duration: 50 minutes
+lang: en
 objectives:
   - Objective 1
   - Objective 2
