@@ -1,0 +1,37 @@
+---
+layout: default
+---
+
+<article class="lesson">
+  <header class="lesson-header">
+    <p class="badge">Lesson</p>
+    <h1>{{ page.title }}</h1>
+    {% if page.description %}<p class="lesson-description">{{ page.description }}</p>{% endif %}
+    <div class="lesson-meta">
+      {% if page.duration %}<span><strong>Duration:</strong> {{ page.duration }}</span>{% endif %}
+      {% if page.objectives %}
+        <span><strong>Objectives:</strong> {{ page.objectives | join: '; ' }}</span>
+      {% endif %}
+    </div>
+  </header>
+
+  <section class="lesson-section">
+    <h2>Agenda</h2>
+    {{ page.agenda | markdownify }}
+  </section>
+
+  <section class="lesson-section">
+    <h2>Guided Practice</h2>
+    {{ page.practice | markdownify }}
+  </section>
+
+  <section class="lesson-section">
+    <h2>Resources</h2>
+    {{ page.resources | markdownify }}
+  </section>
+
+  <section class="lesson-section">
+    <h2>Homework & Reflection</h2>
+    {{ page.homework | markdownify }}
+  </section>
+</article>
