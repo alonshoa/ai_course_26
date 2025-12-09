@@ -7,6 +7,7 @@ A standalone GitHub Pages theme for an Artificial Intelligence & Computer Scienc
 - Light/dark mode with automatic detection and manual toggle (persists via `localStorage`)
 - Color-blind-safe palette with WCAG-friendly contrast
 - Modular content structure for lessons, slides, assignments, notebooks, and projects
+- Language switcher (English/Hebrew) that keeps links in sync with the selected locale
 - Lesson template layout to keep weekly materials consistent
 
 ## Repository Structure
@@ -15,21 +16,28 @@ assets/
   css/style.css      # Theme styles
   js/theme-toggle.js # Theme + navigation interactions
   images/            # Place logos/screenshots here
-content/
-  lessons/           # Lesson pages (use the template to start)
-  slides/            # Slide links or embeds
-  assignments/       # Homework and practice tasks
-  notebooks/         # Colab or Jupyter links
-  projects/          # Final project guidelines and updates
+  content/
+    en/
+      lessons/         # English lesson pages (use the template to start)
+      slides/          # English slide links or embeds
+      assignments/     # English homework and practice tasks
+      notebooks/       # English Colab or Jupyter links
+      projects/        # English project guidelines and updates
+    he/
+      lessons/         # Hebrew lesson pages
+      slides/          # Hebrew slide links or embeds
+      assignments/     # Hebrew homework and practice tasks
+      notebooks/       # Hebrew Colab or Jupyter links
+      projects/        # Hebrew project guidelines and updates
 _layouts/            # Layouts for pages (default + lesson)
 _includes/           # Reusable header and footer
 index.md             # Home page (syllabus, structure, quick links)
 ```
 
 ## Adding New Content
-1. **Lessons:** Copy `content/lessons/lesson-template.md`, rename it, and edit the front matter fields (title, description, duration, objectives, agenda, practice, resources, homework).
-2. **Slides / Assignments / Notebooks:** Add a markdown file under the relevant folder with `layout: default` and link it from `index.md` or the navigation.
-3. **Projects:** Update `content/projects/index.md` with new checkpoints, rubrics, and resources.
+1. **Lessons:** Copy `content/en/lessons/lesson-template.md` (or the Hebrew version under `content/he/lessons/`), rename it, and edit the front matter fields (title, description, duration, objectives, agenda, practice, resources, homework).
+2. **Slides / Assignments / Notebooks:** Add a markdown file under the language-specific folder with `layout: default` and link it from `index.md` or the navigation.
+3. **Projects:** Update `content/en/projects/index.md` and the Hebrew counterpart at `content/he/projects/index.md` with new checkpoints, rubrics, and resources.
 4. **Branding:** Replace the emoji logo in `_includes/header.html` and add an image to `assets/images/` if desired.
 
 ## Running Locally with GitHub Pages / Jekyll

@@ -16,12 +16,21 @@
     <a href="{{ '/' | relative_url }}#toc">Course Structure</a>
     <a href="{{ '/' | relative_url }}#quick-links">Quick Links</a>
     <a href="{{ '/' | relative_url }}#resources">Resources</a>
-    <a href="{{ '/content/projects/' | relative_url }}">Projects</a>
+    <a data-lang-section="projects" href="{{ '/content/en/projects/' | relative_url }}">Projects</a>
   </nav>
-  <div class="theme-switch" role="presentation">
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-      <span class="icon" aria-hidden="true">🌗</span>
-      <span class="label">Theme</span>
-    </button>
+  <div class="header-controls" role="presentation">
+    <label class="language-select">
+      <span class="sr-only">Select language</span>
+      <select id="language-toggle" aria-label="Select language">
+        <option value="en">English</option>
+        <option value="he">עברית</option>
+      </select>
+    </label>
+    <div class="theme-switch">
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+        <span class="icon" aria-hidden="true">🌗</span>
+        <span class="label">Theme</span>
+      </button>
+    </div>
   </div>
 </header>
