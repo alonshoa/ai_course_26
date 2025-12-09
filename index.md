@@ -24,6 +24,7 @@ title: AI & CS High-School Course
       <li><strong>Deliverables:</strong> weekly assignments, reflective notes, guided labs, and a final showcase project.</li>
       <li><strong>Practice:</strong> code-alongs, notebooks, demos, and visualization challenges.</li>
     </ul>
+    <p><a data-lang-file="lessons/syllabus.md" href="{{ '/content/en/lessons/syllabus.md' | relative_url }}">View the full syllabus</a></p>
   </article>
   <article class="card" id="versioning">
     <h2>Versioning & Updates</h2>
@@ -83,6 +84,7 @@ title: AI & CS High-School Course
     <article class="card">
       <h3>Core Sections</h3>
       <ul class="list">
+        <li><a data-lang-file="lessons/syllabus.md" href="{{ '/content/en/lessons/syllabus.md' | relative_url }}">Syllabus</a></li>
         <li><a data-lang-section="lessons" href="{{ '/content/en/lessons/' | relative_url }}">Lessons</a></li>
         <li><a data-lang-section="slides" href="{{ '/content/en/slides/' | relative_url }}">Slides</a></li>
         <li><a data-lang-section="assignments" href="{{ '/content/en/assignments/' | relative_url }}">Assignments</a></li>

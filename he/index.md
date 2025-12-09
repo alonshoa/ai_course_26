@@ -25,6 +25,7 @@ title: קורס בינה מלאכותית ומדעי המחשב
       <li><strong>תוצרים:</strong> משימות שבועיות, רפלקציה, מעבדות מודרכות ומופע סיום.</li>
       <li><strong>תרגול:</strong> כתיבה משותפת, מחברות, הדגמות ואתגרי ויזואליזציה.</li>
     </ul>
+    <p><a data-lang-file="lessons/syllabus.md" href="{{ '/content/he/lessons/syllabus.md' | relative_url }}">??????</a></p>
   </article>
   <article class="card" id="versioning">
     <h2>עדכונים וגרסאות</h2>
@@ -84,6 +85,7 @@ title: קורס בינה מלאכותית ומדעי המחשב
     <article class="card">
       <h3>מדורים מרכזיים</h3>
       <ul class="list">
+        <li><a data-lang-file="lessons/syllabus.md" href="{{ '/content/he/lessons/syllabus.md' | relative_url }}">סילבוס</a></li>
         <li><a data-lang-section="lessons" href="{{ '/content/he/lessons/' | relative_url }}">שיעורים</a></li>
         <li><a data-lang-section="slides" href="{{ '/content/he/slides/' | relative_url }}">מצגות</a></li>
         <li><a data-lang-section="assignments" href="{{ '/content/he/assignments/' | relative_url }}">מטלות</a></li>
