@@ -1,0 +1,407 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Conv2D Sliding Window</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.0/theme/black.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/zenburn.min.css">
+    <style>
+      :root {
+        --accent: #83f2c9;
+        --muted: #7ac8ff;
+        --grid-bg: #111;
+        --grid-line: #333;
+        --grid-text: #e8f1ff;
+        --highlight: #f5a524;
+        --output: #c0f2ff;
+      }
+      body {
+        background: #000;
+      }
+      .conv-layout {
+        display: grid;
+        grid-template-columns: 1fr 220px 1fr;
+        gap: 1.5rem;
+        align-items: center;
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .grid {
+        display: grid;
+        gap: 2px;
+        background: var(--grid-line);
+        padding: 6px;
+        border-radius: 8px;
+      }
+      .grid.input-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      .grid.kernel-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .grid.output-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .grid-title {
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.8rem;
+        margin-bottom: 0.35rem;
+      }
+      .cell {
+        width: 60px;
+        height: 60px;
+        display: grid;
+        place-items: center;
+        background: var(--grid-bg);
+        color: var(--grid-text);
+        font-size: 1.2rem;
+        border-radius: 6px;
+        border: 1px solid var(--grid-line);
+        transition: background 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      }
+      .cell.active {
+        background: rgba(245, 165, 36, 0.2);
+        border-color: var(--highlight);
+        color: #fff;
+        transform: translateZ(0) scale(1.02);
+      }
+      .cell.kernel-active {
+        background: rgba(131, 242, 201, 0.16);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .cell.output-cell {
+        background: rgba(124, 199, 255, 0.08);
+        color: var(--output);
+        font-weight: 700;
+      }
+      .legend {
+        display: grid;
+        gap: 0.35rem;
+        color: #ccc;
+        font-size: 0.95rem;
+        margin-top: 0.6rem;
+      }
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      .dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .dot.input { background: rgba(245, 165, 36, 0.5); border: 1px solid var(--highlight); }
+      .dot.kernel { background: rgba(131, 242, 201, 0.5); border: 1px solid var(--accent); }
+      .dot.output { background: rgba(124, 199, 255, 0.4); border: 1px solid var(--muted); }
+      .play-controls {
+        margin-top: 1rem;
+        color: #e8f1ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        font-size: 0.95rem;
+      }
+      .play-controls button {
+        padding: 0.4rem 1rem;
+        border-radius: 999px;
+        border: 1px solid var(--muted);
+        background: rgba(122, 200, 255, 0.08);
+        color: #e8f1ff;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: background 0.2s, transform 0.2s;
+      }
+      .play-controls button:hover {
+        background: rgba(122, 200, 255, 0.16);
+        transform: translateY(-1px);
+      }
+      .formula {
+        font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        color: var(--accent);
+        font-size: 1.1rem;
+        margin: 0.7rem 0;
+      }
+      .formula small { color: #aaa; }
+      .notes {
+        color: #d1d5db;
+        max-width: 900px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      @media (max-width: 960px) {
+        .conv-layout {
+          grid-template-columns: 1fr;
+        }
+        .cell {
+          width: 48px;
+          height: 48px;
+          font-size: 1rem;
+        }
+        .grid.kernel-grid,
+        .grid.output-grid {
+          justify-self: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-background-color="black">
+          <h1 style="color: var(--muted); margin-bottom: 0.5em;">2D Convolution</h1>
+          <p style="color: #d1d5db; font-size: 1.1rem;">Watch the sliding window move across the input grid and see each output value update. Use the arrow keys to move between slides and space to pause or resume the animation.</p>
+        </section>
+        <section data-background-color="black">
+          <div class="conv-layout">
+            <div>
+              <div class="grid-title">Input (5×5)</div>
+              <div id="input-grid" class="grid input-grid"></div>
+            </div>
+            <div>
+              <div class="grid-title">Kernel (3×3)</div>
+              <div id="kernel-grid" class="grid kernel-grid"></div>
+            </div>
+            <div>
+              <div class="grid-title">Output (3×3)</div>
+              <div id="output-grid" class="grid output-grid"></div>
+            </div>
+          </div>
+          <div class="legend">
+            <span><span class="dot input"></span>Active receptive field</span>
+            <span><span class="dot kernel"></span>Kernel coefficients</span>
+            <span><span class="dot output"></span>Computed output value</span>
+          </div>
+          <div class="play-controls">
+            <button id="toggle">Pause</button>
+            <span id="status">Sliding window position 1 of 9</span>
+          </div>
+        </section>
+        <section data-background-color="black">
+          <h2 style="color: var(--muted);">How to size the output?</h2>
+          <p class="notes">For a 2D convolution with input height/width <strong>H</strong> and <strong>W</strong>, kernel size <strong>K</strong> (square), zero padding <strong>P</strong>, and stride <strong>S</strong>, the spatial size of the result is:</p>
+          <p class="formula">H<sub>out</sub> = \(\left\lfloor \frac{H - K + 2P}{S} \right\rfloor + 1\), &nbsp; W<sub>out</sub> = \(\left\lfloor \frac{W - K + 2P}{S} \right\rfloor + 1\)</p>
+          <p class="notes">In the demo, <em>H = W = 5</em>, <em>K = 3</em>, <em>P = 0</em>, and <em>S = 1</em>, so the output is <strong>3 × 3</strong>. Increasing padding keeps more border information, while larger strides reduce the output size by skipping positions.</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.0/plugin/notes/notes.min.js"></script>
+    <script>
+      const inputValues = [
+        [1, 2, 3, 2, 0],
+        [0, 1, 2, 3, 1],
+        [1, 3, 1, 0, 2],
+        [2, 1, 0, 1, 3],
+        [0, 2, 1, 2, 1]
+      ];
+      const kernelValues = [
+        [1, 0, -1],
+        [1, 0, -1],
+        [1, 0, -1]
+      ];
+      const stride = 1;
+      const padding = 0;
+
+      const positions = [];
+      const effectiveHeight = inputValues.length + 2 * padding;
+      const effectiveWidth = inputValues[0].length + 2 * padding;
+
+      const outRows = Math.floor((effectiveHeight - kernelValues.length) / stride) + 1;
+      const outCols = Math.floor((effectiveWidth - kernelValues[0].length) / stride) + 1;
+
+      for (let r = 0; r < outRows; r++) {
+        for (let c = 0; c < outCols; c++) {
+          positions.push({ r, c });
+        }
+      }
+
+      const inputGrid = document.getElementById('input-grid');
+      const kernelGrid = document.getElementById('kernel-grid');
+      const outputGrid = document.getElementById('output-grid');
+      const status = document.getElementById('status');
+      const toggle = document.getElementById('toggle');
+
+      const inputCells = [];
+      const kernelCells = [];
+      const outputCells = [];
+
+      function buildGrid(values, container, store, extraClass = '') {
+        values.forEach((row, r) => {
+          const rowCells = [];
+          row.forEach((val) => {
+            const cell = document.createElement('div');
+            cell.className = `cell ${extraClass}`.trim();
+            cell.textContent = val;
+            container.appendChild(cell);
+            rowCells.push(cell);
+          });
+          store.push(rowCells);
+        });
+      }
+
+      buildGrid(inputValues, inputGrid, inputCells);
+      buildGrid(kernelValues, kernelGrid, kernelCells, 'kernel-active');
+      function computeAt(pos) {
+        let sum = 0;
+        for (let i = 0; i < kernelValues.length; i++) {
+          for (let j = 0; j < kernelValues[0].length; j++) {
+            const inputVal = inputValues[pos.r + i][pos.c + j];
+            const weight = kernelValues[i][j];
+            sum += inputVal * weight;
+          }
+        }
+        return sum;
+      }
+
+      function clearHighlights() {
+        inputCells.flat().forEach((cell) => cell.classList.remove('active'));
+      }
+
+      let stepIndex = 0;
+      function updateStep() {
+        clearHighlights();
+        const pos = positions[stepIndex];
+        for (let i = 0; i < kernelValues.length; i++) {
+          for (let j = 0; j < kernelValues[0].length; j++) {
+            inputCells[pos.r + i][pos.c + j].classList.add('active');
+          }
+        }
+        const value = computeAt(pos);
+        outputCells[pos.r][pos.c].textContent = value;
+        outputCells[pos.r][pos.c].classList.add('active');
+        status.textContent = `Sliding window position ${stepIndex + 1} of ${positions.length}`;
+      }
+
+      function resetOutputHighlights() {
+        outputCells.flat().forEach((cell) => cell.classList.remove('active'));
+      }
+
+      function buildOutputStructure() {
+        outputGrid.innerHTML = '';
+        outputGrid.style.gridTemplateColumns = `repeat(${outCols}, 1fr)`;
+        outputCells.length = 0;
+        for (let r = 0; r < outRows; r++) {
+          const rowCells = [];
+          for (let c = 0; c < outCols; c++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell output-cell';
+            cell.textContent = '';
+            outputGrid.appendChild(cell);
+            rowCells.push(cell);
+          }
+          outputCells.push(rowCells);
+        }
+      }
+
+      buildOutputStructure();
+      updateStep();
+      let playing = true;
+      let timer = setInterval(() => {
+        if (!playing) return;
+        stepIndex = (stepIndex + 1) % positions.length;
+        resetOutputHighlights();
+        updateStep();
+      }, 1200);
+
+      toggle.addEventListener('click', () => {
+        playing = !playing;
+        toggle.textContent = playing ? 'Pause' : 'Play';
+      });
+
+      Reveal.initialize({
+        width: '100%',
+        height: '100%',
+        margin: 0.04,
+        minScale: 0.2,
+        maxScale: 2.0,
+        controls: false,
+        controlsTutorial: true,
+        controlsLayout: 'bottom-right',
+        controlsBackArrows: 'faded',
+        progress: false,
+        slideNumber: false,
+        showSlideNumber: 'all',
+        hashOneBasedIndex: false,
+        hash: false,
+        respondToHashChanges: false,
+        jumpToSlide: true,
+        history: false,
+        keyboard: true,
+        keyboardCondition: null,
+        disableLayout: false,
+        overview: true,
+        center: true,
+        touch: true,
+        loop: false,
+        rtl: false,
+        navigationMode: 'default',
+        shuffle: false,
+        fragments: true,
+        fragmentInURL: true,
+        embedded: false,
+        help: true,
+        pause: true,
+        showNotes: false,
+        autoPlayMedia: null,
+        preloadIframes: null,
+        autoAnimate: true,
+        autoAnimateMatcher: null,
+        autoAnimateEasing: 'ease',
+        autoAnimateDuration: 1.0,
+        autoAnimateUnmatched: true,
+        autoAnimateStyles: ['opacity', 'color', 'background-color', 'padding', 'font-size', 'line-height', 'letter-spacing', 'border-width', 'border-color', 'border-radius', 'outline', 'outline-offset'],
+        autoSlide: 0,
+        autoSlideStoppable: true,
+        autoSlideMethod: null,
+        defaultTiming: null,
+        mouseWheel: false,
+        previewLinks: false,
+        postMessage: true,
+        postMessageEvents: false,
+        focusBodyOnPageVisibilityChange: true,
+        transition: 'none',
+        transitionSpeed: 'default',
+        backgroundTransition: 'none',
+        pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY,
+        pdfSeparateFragments: true,
+        pdfPageHeightOffset: -1,
+        viewDistance: 3,
+        mobileViewDistance: 2,
+        display: 'block',
+        hideInactiveCursor: true,
+        hideCursorTime: 5000
+      });
+
+      Reveal.addKeyBinding(
+        {
+          keyCode: 32,
+          key: 'SPACE',
+          description: 'Play / pause window animation'
+        },
+        () => {
+          playing = !playing;
+          toggle.textContent = playing ? 'Pause' : 'Play';
+        }
+      );
+
+      Reveal.on('slidechanged', (event) => {
+        const onDemoSlide = event.currentSlide && event.currentSlide.contains(inputGrid);
+        playing = onDemoSlide;
+        toggle.textContent = playing ? 'Pause' : 'Play';
+      });
+    </script>
+  </body>
+</html>
